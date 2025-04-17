@@ -12,7 +12,7 @@
 
 **a)** In any Slack channel, type `/tldr` followed by a date/time. Example: `/tldr 26.04.2024` or `/tldr 3 hours ago`
 
-**b)** On any message, click on three dots and then *From now*
+**b)** On any message, click on three dots and then *From here*
 
 ## Requirements
 
