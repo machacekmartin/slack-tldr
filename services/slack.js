@@ -21,6 +21,7 @@ export class Slack {
       const result = await this.client.conversations.history({
         channel: channelId,
         oldest: oldest,
+        inclusive: true,
         limit: 1000,
       });
       return result.messages;

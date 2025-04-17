@@ -15,7 +15,7 @@ export class OpenAI {
       In up to 5 sentences, summarize the conversation, capturing the key points and decisions. If the conversation is short, do not hallucinate or make up information to fill in the sentences.
       Use plain sentences, no bullet points or lists.
       When mentioning users, always use their username format.
-      As a final sentence, tell me if the conversation is relevant (some tasks were assigned to me) to me (the user who requested the summary), or not.
+      At the end, tell me if the conversation is relevant (some tasks were assigned to me) to me (the user who requested the summary), or not.
     `;
 
     const userPrompt = `The user ${commandUser.name} has requested a summary of the following Slack thread: <SLACK MESSAGES>\n\n${messageTexts}\n\n</SLACK MESSAGES>`;
