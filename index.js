@@ -124,6 +124,20 @@ async function generateSummary(channelId, timestamp, user, formattedDate) {
               text: `This summary was generated from ${processedMessages.length} messages since ${formattedDate}`
             }
           ]
+        },
+        {
+          type: "actions",
+          elements: [
+            {
+              type: "button",
+              text: {
+                type: "plain_text",
+                text: "Hide summary",
+                emoji: true
+              },
+              action_id: "close_summary"
+            }
+          ]
         }
       ]
     };
@@ -135,12 +149,37 @@ async function generateSummary(channelId, timestamp, user, formattedDate) {
 }
 
 /**
+ * Checks if the bot can access the channel (including DMs)
+ * @param {string} channelId - The channel ID to check
+ * @returns {Promise<boolean>} - Whether the bot can access the channel
+ */
+async function canBotAccessChannel(channelId) {
+  try {
+    const result = await slack.client.conversations.info({
+      channel: channelId
+    });
+    
+    // For regular channels, check if bot is a member
+    return result.channel.is_member;
+  } catch (error) {
+    console.error('Error checking channel access:', error);
+    return false;
+  }
+}
+
+/**
  * Handles the /tldr command
  */
 app.command('/tldr', async ({ command, ack, respond }) => {
   await ack();
 
   try {
+    // Check if bot can access the channel
+    if (!(await canBotAccessChannel(command.channel_id))) {
+      await respond('I need to be added to this channel first. Please add me using `/invite @TLDR`');
+      return;
+    }
+
     // Parse date
     const { date, timestamp, formatted, error } = parseDate(command.text.trim());
     if (error) {
@@ -181,6 +220,12 @@ app.shortcut('tldr_from_here', async ({ ack, body, respond }) => {
   await ack();
 
   try {
+    // Check if bot can access the channel
+    if (!(await canBotAccessChannel(body.channel.id))) {
+      await respond('I need to be added to this channel first. Please add me using `/invite @TLDR`');
+      return;
+    }
+
     const messageTs = body.message.ts;
     const channelId = body.channel.id;
     const userId = body.user.id;
@@ -210,6 +255,14 @@ app.shortcut('tldr_from_here', async ({ ack, body, respond }) => {
   } catch (error) {
     await respond('Error processing the request. Please try again later.');
   }
+});
+
+// Add handler for the close button
+app.action('close_summary', async ({ ack, body, respond }) => {
+  await ack();
+  await respond({
+    delete_original: true
+  });
 });
 
 // Start the app
