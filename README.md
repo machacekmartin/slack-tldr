@@ -10,7 +10,7 @@
 
 ## Usage
 
-1. In any Slack channel, type `/tldr` followed by a date in DD.MM.YYYY format. Example: `/tldr 26.04.2024` or `/tldr 3 hours ago`
+1. In any Slack channel, type `/tldr` followed by a date in. Example: `/tldr 26.04.2024` or `/tldr 3 hours ago`
 2. On any message, click on three dots and then *From now*
 
 ## Requirements
